@@ -9,7 +9,9 @@ import acm.program.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class NameSurfer extends Program implements NameSurferConstants {
+//temp console
+
+public class NameSurfer extends ConsoleProgram implements NameSurferConstants {
 
 /* Method: init() */
 /**
@@ -17,7 +19,23 @@ public class NameSurfer extends Program implements NameSurferConstants {
  * and initializing the interactors at the bottom of the window.
  */
 	public void init() {
-	    // You fill this in, along with any helper methods //
+	    
+		//reading in of database
+		
+		// initialization of interactors
+		
+		nameField = new JTextField(30);
+		nameField.addActionListener(this);
+		JButton graphButton = new JButton ("Graph");
+		JButton clearButton = new JButton ("Clear");
+		
+		add (new JLabel("Name: "), SOUTH);
+		add (nameField, SOUTH);
+		add (graphButton, SOUTH);
+		add (clearButton, SOUTH);
+		
+		addActionListeners();
+		
 	}
 
 /* Method: actionPerformed(e) */
@@ -27,6 +45,19 @@ public class NameSurfer extends Program implements NameSurferConstants {
  * button actions.
  */
 	public void actionPerformed(ActionEvent e) {
-		// You fill this in //
+		
+		if (e.getSource().equals(nameField)) chosenFirstName = nameField.getText();
+		
+		else if (e.getActionCommand().equals("Graph")) {
+			chosenFirstName = nameField.getText();
+			println("Graph: " + "\"" + chosenFirstName + "\"");
+		}
+			
+		else if (e.getActionCommand().equals("Clear")) 
+			println("Clear all.");
 	}
+	
+	//INSTANCE VARIABLES
+	private String chosenFirstName = "";
+	private JTextField nameField;
 }
