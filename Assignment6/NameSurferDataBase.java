@@ -9,6 +9,11 @@
  * and "ERIC" are the same names.
  */
 
+import java.io.*;
+import java.util.HashMap;
+
+import acm.util.ErrorException;
+
 public class NameSurferDataBase implements NameSurferConstants {
 	
 /* Constructor: NameSurferDataBase(filename) */
@@ -17,10 +22,71 @@ public class NameSurferDataBase implements NameSurferConstants {
  * data in the specified file.  The constructor throws an error
  * exception if the requested file does not exist or if an error
  * occurs as the file is being read.
+ * @throws IOException 
  */
-	public NameSurferDataBase(String filename) {
-		// You fill this in //
+	public NameSurferDataBase(String filename) throws IOException {
+		
+		BufferedReader br = null;
+		database = new HashMap<String,NameSurferEntry>();
+				
+		try {
+ 
+			String sCurrentLine;
+ 
+			br = new BufferedReader(new FileReader(filename));
+ 
+			while ((sCurrentLine = br.readLine()) != null) {
+				currentEntry = new NameSurferEntry(sCurrentLine);
+				String name = currentEntry.getName();
+				//BREAKS HERE - NOW RESOLVED?
+				database.put(name,currentEntry);
+			}
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null) br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		/*BufferedReader rd = null;
+			try {
+				rd = new BufferedReader(new FileReader(filename));
+			} catch (FileNotFoundException e2) {
+				throw new ErrorException(e2);
+			}
+			
+			while (true) {
+				
+					String line;
+					
+					try {
+						line = rd.readLine();
+						currentEntry = new NameSurferEntry(line);
+						database.put(currentEntry.getName().toLowerCase(), currentEntry);
+					} catch (IOException e) {
+						rd.close();
+						throw new ErrorException(e);
+					}
+					
+					//BREAKS HERE
+					
+					if (line == null) {
+						try {
+							rd.close();
+						} catch (IOException e1) {
+							rd.close();
+							throw new ErrorException(e1);
+						}
+						break;
+					}
+				}	*/
 	}
+		
+	
 	
 /* Method: findEntry(name) */
 /**
@@ -29,8 +95,16 @@ public class NameSurferDataBase implements NameSurferConstants {
  * method returns null.
  */
 	public NameSurferEntry findEntry(String name) {
-		// You need to turn this stub into a real implementation //
-		return null;
+		name = name.toLowerCase();
+		if (database.get(name) != null) {
+			return database.get(name);
+		} else return null;
 	}
+	
+	public HashMap<String,NameSurferEntry> database;
+	private NameSurferEntry currentEntry;
+	
+	
 }
+
 

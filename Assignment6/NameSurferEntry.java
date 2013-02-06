@@ -7,12 +7,10 @@
  */
 
 import acm.util.*;
-
+import acm.program.*;
 import java.util.*;
 
 public class NameSurferEntry implements NameSurferConstants {
-
-
 
 /* Constructor: NameSurferEntry(line) */
 /**
@@ -22,22 +20,17 @@ public class NameSurferEntry implements NameSurferConstants {
  * decade.
  */
 	public NameSurferEntry(String line) {
-		
-		//read in the line
-		
+				
 		StringTokenizer st = new StringTokenizer(line);
 		
-		//assign name
-	     if (st.hasMoreTokens()) {
-	         name = st.nextToken();
-	     }
-	     
-	     //assign ranks
-	     while (st.hasMoreTokens()) {
-	    	 for (int i = 0; i < 11; i++) {
-	    		 rank[i] = Integer.parseInt(st.nextToken());
+	     	 //assign first token to name
+	    	 name = st.nextToken();
+	    	 
+	    	 //assign next tokens to ranks
+	    	 for (int i = 0; i < 10; i++) {
+	    		 if (st.hasMoreTokens()) rank[i] = Integer.parseInt(st.nextToken());
 	    	 }
-	     }
+	     
 		
 	}
 
@@ -68,7 +61,7 @@ public class NameSurferEntry implements NameSurferConstants {
  */
 	public String toString() {
 		String ranks = "";
-		for (int i = 0; i < 11; i++) {
+		for (int i = 0; i < 10; i++) {
 			ranks += (rank[i] + " ");
 		}
 		String output = name + " " + "[" + ranks + "]";

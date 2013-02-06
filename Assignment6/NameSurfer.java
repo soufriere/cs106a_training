@@ -6,13 +6,17 @@
  */
 
 import acm.program.*;
+import acm.util.ErrorException;
 
 import java.awt.TextField;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 
 //temp console
 
+@SuppressWarnings("serial")
 public class NameSurfer extends ConsoleProgram implements NameSurferConstants {
 
 /* Method: init() */
@@ -23,10 +27,17 @@ public class NameSurfer extends ConsoleProgram implements NameSurferConstants {
 	public void init() {
 	    
 		//reading in of database
-
+		try {
+			NameSurferDataBase implementedDataBase = new NameSurferDataBase("names-data.txt");
+		} catch (IOException e) {
+			throw new ErrorException(e);
+		}
+		
+		/*TEST CODE FOR STRING RETURNING AND NAMESURFERENTRY 
+		 * String line = "Sam 0 1 2 3 4 5 6 7 8 9";
+		 * NameSurferEntry Sam = new NameSurferEntry(line);*/
 		
 		// initialization of interactors
-		
 		nameField = new TextField(30);
 		JButton graphButton = new JButton ("Graph");
 		JButton clearButton = new JButton ("Clear");
