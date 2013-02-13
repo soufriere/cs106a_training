@@ -19,6 +19,17 @@ public class NameSurferGraph extends GCanvas
 	*/
 	public NameSurferGraph() {
 		addComponentListener(this);
+		
+		//initialise color arraylist
+		for (int i = 0; i < 10; i++) {
+		lineColors.add(Color.BLACK);
+		lineColors.add(Color.RED);
+		lineColors.add(Color.BLUE);
+		lineColors.add(Color.MAGENTA);
+		lineColors.add(Color.GREEN);
+		}
+		
+		
 		//	 You fill in the rest //
 	}
 	
@@ -36,7 +47,7 @@ public class NameSurferGraph extends GCanvas
 	* simply stores the entry; the graph is drawn by calling update.
 	*/
 	public void addEntry(NameSurferEntry entry) {
-		// You fill this in //
+		displayedEntries.add(entry);
 	}
 	
 	
@@ -49,15 +60,86 @@ public class NameSurferGraph extends GCanvas
 	* the size of the canvas changes.
 	*/
 	public void update() {
-		//	 You fill this in //
+		
+		//delete all objects
+		removeAll();
+		
+		//reassemble display according to list of entries
+		drawGrid();
+		
+		//draw any necessary entry lines
+		drawEntryLines();
+		
 	}
 	
-	
-	
-	
+	private void drawEntryLines() {
+		
+		//for every entry, draw a line, cycling through the colours
+		for (int i = 0; i < displayedEntries.size(); i++) {
+			
+			NameSurferEntry currentEntry = displayedEntries.get(i);
+			
+			//draw 11 line segments and 11 labels
+			for (int k = 0; k < 11; k++) {
+				
+				GPoint currentPoint = new GPoint(0, 
+						(getHeight() - 40) / 1000 * currentEntry.getRank(k) + 20);
+				if (currentPoint.getY() == 20) currentPoint.setLocation(currentPoint.getX(), 1020);
+				
+				GPoint nextPoint = new GPoint(0 + (getWidth()/11) * k++, 
+						(getHeight() - 40) / 1000 * currentEntry.getRank(k++) + 20);
+				if (nextPoint.getY() == 20) nextPoint.setLocation(nextPoint.getX(), 1020);
+				
+				GLine currentSegment = new GLine(currentPoint.getX(), currentPoint.getY(),
+						nextPoint.getX(), nextPoint.getY());
+				currentSegment.setColor(lineColors.get(k));
+				add(currentSegment);
+				
+				String labelText = "" + currentEntry.getName();
+				if (currentEntry.getRank(k) == 0) {
+					labelText += " *";
+					} else {
+						labelText += currentEntry.getRank(k);
+					}
+			
+				GLabel currentLabel = new GLabel(labelText);
+				add(currentLabel, currentPoint);
+				
+			}
+			
+		}
+		
+	}
+
+	private void drawGrid() {
+		
+		//draw 11 vertical lines
+		
+		for (int i = 0; i < 11; i++) {
+			GLine vline = new GLine((i * (getWidth()/11)), 0, (i * (getWidth()/11)), getHeight());
+			add(vline);
+		}
+		
+		//draw 2 horizontal lines
+		
+		add(new GLine(0, 20, getWidth(), 20));
+		add(new GLine(0, getHeight() - 20, getWidth(), getHeight() - 20));
+		
+		//draw labels
+		int decade = 1900;
+		for (int i = 0; i < 11; i++) {
+			add(new GLabel("" + (decade + (i * 10)), ((getWidth() / 11) * i) + 5, getHeight() - 5));
+		}
+		
+	}
+
 	/* Implementation of the ComponentListener interface */
 	public void componentHidden(ComponentEvent e) { }
 	public void componentMoved(ComponentEvent e) { }
 	public void componentResized(ComponentEvent e) { update(); }
 	public void componentShown(ComponentEvent e) { }
+	
+	private ArrayList<NameSurferEntry> displayedEntries = new ArrayList<NameSurferEntry>();
+	private ArrayList<Color> lineColors = new ArrayList<Color>();
+
 }

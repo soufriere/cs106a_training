@@ -37,8 +37,7 @@ public class NameSurferDataBase implements NameSurferConstants {
  
 			while ((sCurrentLine = br.readLine()) != null) {
 				currentEntry = new NameSurferEntry(sCurrentLine);
-				String name = currentEntry.getName();
-				//BREAKS HERE - NOW RESOLVED?
+				String name = currentEntry.getName().toLowerCase();
 				database.put(name,currentEntry);
 			}
  
@@ -51,39 +50,6 @@ public class NameSurferDataBase implements NameSurferConstants {
 				ex.printStackTrace();
 			}
 		}
-		
-		/*BufferedReader rd = null;
-			try {
-				rd = new BufferedReader(new FileReader(filename));
-			} catch (FileNotFoundException e2) {
-				throw new ErrorException(e2);
-			}
-			
-			while (true) {
-				
-					String line;
-					
-					try {
-						line = rd.readLine();
-						currentEntry = new NameSurferEntry(line);
-						database.put(currentEntry.getName().toLowerCase(), currentEntry);
-					} catch (IOException e) {
-						rd.close();
-						throw new ErrorException(e);
-					}
-					
-					//BREAKS HERE
-					
-					if (line == null) {
-						try {
-							rd.close();
-						} catch (IOException e1) {
-							rd.close();
-							throw new ErrorException(e1);
-						}
-						break;
-					}
-				}	*/
 	}
 		
 	
@@ -95,13 +61,18 @@ public class NameSurferDataBase implements NameSurferConstants {
  * method returns null.
  */
 	public NameSurferEntry findEntry(String name) {
-		name = name.toLowerCase();
-		if (database.get(name) != null) {
-			return database.get(name);
-		} else return null;
+		if (database.get(name.toLowerCase()) == null) {
+			return null;
+		} else return database.get(name.toLowerCase());
+		
 	}
 	
-	public HashMap<String,NameSurferEntry> database;
+	
+	public int HashMapSize() {
+		return database.size();
+	}
+	
+	public HashMap<String, NameSurferEntry> database;
 	private NameSurferEntry currentEntry;
 	
 	

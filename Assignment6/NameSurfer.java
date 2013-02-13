@@ -11,13 +11,12 @@ import acm.util.ErrorException;
 import java.awt.TextField;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.swing.*;
 
-//temp console
-
 @SuppressWarnings("serial")
-public class NameSurfer extends ConsoleProgram implements NameSurferConstants {
+public class NameSurfer extends Program implements NameSurferConstants {
 
 /* Method: init() */
 /**
@@ -25,17 +24,16 @@ public class NameSurfer extends ConsoleProgram implements NameSurferConstants {
  * and initializing the interactors at the bottom of the window.
  */
 	public void init() {
+		
+		graph = new NameSurferGraph();
+		add(graph);
 	    
 		//reading in of database
 		try {
-			NameSurferDataBase implementedDataBase = new NameSurferDataBase("names-data.txt");
+			implementedDataBase = new NameSurferDataBase("names-data.txt");
 		} catch (IOException e) {
 			throw new ErrorException(e);
 		}
-		
-		/*TEST CODE FOR STRING RETURNING AND NAMESURFERENTRY 
-		 * String line = "Sam 0 1 2 3 4 5 6 7 8 9";
-		 * NameSurferEntry Sam = new NameSurferEntry(line);*/
 		
 		// initialization of interactors
 		nameField = new TextField(30);
@@ -60,17 +58,17 @@ public class NameSurfer extends ConsoleProgram implements NameSurferConstants {
  */
 	public void actionPerformed(ActionEvent e) {
 		
-		if (e.getSource().equals(nameField)) {chosenFirstName = nameField.getText();
-		
+		if (e.getSource().equals(nameField)) {
+			graph.addEntry(implementedDataBase.findEntry(nameField.getText()));
                 } else if (e.getActionCommand().equals("Graph")) {
-			chosenFirstName = nameField.getText();
-			println("Graph: " + "\"" + chosenFirstName + "\"");
+            graph.addEntry(implementedDataBase.findEntry(nameField.getText()));;
 		} else if (e.getActionCommand().equals("Clear")) {
-			println("Clear all.");
+			//FILL IN
                 }
 	}
 	
 	//INSTANCE VARIABLES
-	private String chosenFirstName = "";
 	private TextField nameField;
+	private NameSurferDataBase implementedDataBase;
+	private NameSurferGraph graph;
 }
