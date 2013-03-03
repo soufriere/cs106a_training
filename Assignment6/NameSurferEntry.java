@@ -27,7 +27,7 @@ public class NameSurferEntry implements NameSurferConstants {
 	    	 name = st.nextToken();
 	    	 
 	    	 //assign next tokens to ranks
-	    	 for (int i = 0; i < 10; i++) {
+	    	 for (int i = 0; i < 13; i++) {
 	    		 if (st.hasMoreTokens()) rank[i] = Integer.parseInt(st.nextToken());
 	    	 }
 	     
@@ -70,7 +70,7 @@ public class NameSurferEntry implements NameSurferConstants {
 	
 	//IVs
 	String name;
-	int[] rank = new int[10];
+	int[] rank = new int[13];
 	
 }
 

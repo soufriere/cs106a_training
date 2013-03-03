@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.awt.*;
 
+@SuppressWarnings("serial")
 public class NameSurferGraph extends GCanvas
 	implements NameSurferConstants, ComponentListener {
 
@@ -37,7 +38,7 @@ public class NameSurferGraph extends GCanvas
 	* Clears the list of name surfer entries stored inside this class.
 	*/
 	public void clear() {
-		//	 You fill this in //
+		displayedEntries.removeAll(displayedEntries);
 	}
 	
 	/* Method: addEntry(entry) */
@@ -48,6 +49,7 @@ public class NameSurferGraph extends GCanvas
 	*/
 	public void addEntry(NameSurferEntry entry) {
 		displayedEntries.add(entry);
+		update();
 	}
 	
 	
@@ -79,32 +81,57 @@ public class NameSurferGraph extends GCanvas
 			
 			NameSurferEntry currentEntry = displayedEntries.get(i);
 			
-			//draw 11 line segments and 11 labels
-			for (int k = 0; k < 11; k++) {
+			Color currentColor = lineColors.get(i+1); // IT DOES WORK :D
+			
+			double rankHeight = (getHeight() - 40.0) / 1000.0; // STUPID ME: NEVER DIVIDE A DOUBLE BY AN INTEGER; LOST 2 HOURS ON THIS PROBLEM
+			double periodWidth = (getWidth() / 11);
+			
+			//create start point at height of corresponding rank
+			GPoint currentPoint = new GPoint(periodWidth * 0, (rankHeight * currentEntry.getRank(0) + 20));
+			//create the end point of the segment with the Y-rank of the next period
+			GPoint nextPoint = new GPoint(periodWidth * 1, (rankHeight * currentEntry.getRank(1) + 20));
+			
+			for (int k = 0; k < 10; k++) {
 				
-				GPoint currentPoint = new GPoint(0, 
-						(getHeight() - 40) / 1000 * currentEntry.getRank(k) + 20);
-				if (currentPoint.getY() == 20) currentPoint.setLocation(currentPoint.getX(), 1020);
+				int rank = currentEntry.getRank(k);
+				int nrank = currentEntry.getRank(k + 1);
+				int n2rank = currentEntry.getRank(k + 2);
 				
-				GPoint nextPoint = new GPoint(0 + (getWidth()/11) * k++, 
-						(getHeight() - 40) / 1000 * currentEntry.getRank(k++) + 20);
-				if (nextPoint.getY() == 20) nextPoint.setLocation(nextPoint.getX(), 1020);
+				//if the rank is 0, then set it's Y coordinate to be at the bottom of the graph
+				if (rank == 0) {
+					currentPoint.setLocation(periodWidth * k, (getHeight() - 20));
+				}
 				
-				GLine currentSegment = new GLine(currentPoint.getX(), currentPoint.getY(),
-						nextPoint.getX(), nextPoint.getY());
-				currentSegment.setColor(lineColors.get(k));
+				//if the rank is 0, then set it's Y coordinate to be at the bottom of the graph
+				if (nrank == 0) {
+					nextPoint.setLocation(periodWidth * (k + 1),
+							(getHeight() - 20));
+				} else {
+					nextPoint.setLocation(nextPoint.getX(), 20 + (nrank * rankHeight));
+				}
+				
+				//draw a segment from start point to end point
+				GLine currentSegment = new GLine(currentPoint.getX(),
+						currentPoint.getY(), nextPoint.getX(), nextPoint.getY());
+				currentSegment.setColor(currentColor);
 				add(currentSegment);
 				
-				String labelText = "" + currentEntry.getName();
-				if (currentEntry.getRank(k) == 0) {
+				//set and add label
+				String labelText = currentEntry.getName();
+				if (rank == 0) {
 					labelText += " *";
-					} else {
-						labelText += currentEntry.getRank(k);
-					}
-			
+				} else {
+					labelText += " " + rank;
+				}
 				GLabel currentLabel = new GLabel(labelText);
-				add(currentLabel, currentPoint);
+				currentLabel.setColor(currentColor);
 				
+				GPoint labelPosition = new GPoint (currentPoint.getX() + 5, currentPoint.getY() - 10);
+				
+				add(currentLabel, labelPosition);
+				
+				currentPoint.setLocation(nextPoint.getX(), nextPoint.getY());
+				nextPoint.setLocation(periodWidth * (k + 2), (rankHeight * n2rank + 20));
 			}
 			
 		}
@@ -139,7 +166,7 @@ public class NameSurferGraph extends GCanvas
 	public void componentResized(ComponentEvent e) { update(); }
 	public void componentShown(ComponentEvent e) { }
 	
-	private ArrayList<NameSurferEntry> displayedEntries = new ArrayList<NameSurferEntry>();
+	public static ArrayList<NameSurferEntry> displayedEntries = new ArrayList<NameSurferEntry>();
 	private ArrayList<Color> lineColors = new ArrayList<Color>();
 
 }

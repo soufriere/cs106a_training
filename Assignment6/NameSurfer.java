@@ -61,9 +61,9 @@ public class NameSurfer extends Program implements NameSurferConstants {
 		if (e.getSource().equals(nameField)) {
 			graph.addEntry(implementedDataBase.findEntry(nameField.getText()));
                 } else if (e.getActionCommand().equals("Graph")) {
-            graph.addEntry(implementedDataBase.findEntry(nameField.getText()));;
+            graph.addEntry(implementedDataBase.findEntry(nameField.getText()));
 		} else if (e.getActionCommand().equals("Clear")) {
-			//FILL IN
+			graph.clear();
                 }
 	}
 	
